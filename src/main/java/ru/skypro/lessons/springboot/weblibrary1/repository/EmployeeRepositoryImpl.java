@@ -8,10 +8,10 @@ import java.util.List;
 @Repository
 public class EmployeeRepositoryImpl implements EmployeeRepository {
     private final List<Employee> employeeList = List.of(
-            new Employee("Катя", 90_000),
-            new Employee("Дима", 110_000),
-            new Employee("Олег", 150_000),
-            new Employee("Вика", 150_000));
+            new Employee(1,"Катя", 90_000),
+            new Employee(2,"Дима", 110_000),
+            new Employee(3,"Олег", 150_000),
+            new Employee(4, "Вика", 150_000));
 
 
     @Override
