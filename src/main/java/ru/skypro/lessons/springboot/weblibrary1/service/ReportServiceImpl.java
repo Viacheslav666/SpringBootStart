@@ -13,13 +13,18 @@ import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode
 @ToString
 @Service
-public class ReportServiceImpl implements ReportService {
+public class  ReportServiceImpl implements ReportService {
     public ReportRepository reportRepository;
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -29,7 +34,9 @@ public class ReportServiceImpl implements ReportService {
        List<ReportDTO> reportDTOS = reportRepository.createReport();
         try {
             String json = objectMapper.writeValueAsString(reportDTOS);
-            Report report = new Report(json);
+            String pathJson = saveReportToFile(json);
+            Report report = new Report();
+            report.setFilePath(pathJson);
             reportRepository.save(report);
          return report.getId();
         }  catch (JsonProcessingException e) {
@@ -42,6 +49,18 @@ public class ReportServiceImpl implements ReportService {
     public ResponseEntity<Report> upload(int id) {
         ResponseEntity<Report> report = reportRepository.readReportById(id);
         return report;
+    }
+
+    @Override
+    public String saveReportToFile(String reportJson) {
+        String fileName = "report-" + System.currentTimeMillis() + ".json";
+        try {
+            Path filePath = Paths.get(fileName);
+            Files.write(filePath, reportJson.getBytes());
+            return filePath.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to save report to file", e);
+        }
     }
 
 }

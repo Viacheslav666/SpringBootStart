@@ -15,6 +15,6 @@ public interface ReportRepository extends CrudRepository<Report, Integer> {
             "where e.position = p " +
             "Group by p.id " )
     List<ReportDTO> createReport();
-    @Query("SELECT r.name FROM Report r WHERE r.id =:id")
+    @Query("SELECT r.filePath FROM Report r WHERE r.id =:id")
     ResponseEntity readReportById(int id);
 }

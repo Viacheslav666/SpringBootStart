@@ -28,7 +28,7 @@ public class ReportDTO {
     public static ReportDTO fromReport(Report report) {
         ReportDTO reportDTO = new ReportDTO(report);
 reportDTO.setId(report.getId());
-reportDTO.setName1(report.getName());
+reportDTO.setName1(report.getFilePath());
 return reportDTO;
     }
 

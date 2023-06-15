@@ -21,7 +21,7 @@ public class Report {
     private int id;
     @Lob
     @Column(name = "name", columnDefinition = "text")
-    private String name;
+    private String filePath;
 
     public Report(String json) {
     }
