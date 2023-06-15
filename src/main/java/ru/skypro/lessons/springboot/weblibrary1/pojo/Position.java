@@ -11,7 +11,11 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private int id;
+    @Lob
     private String position;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_report")
+    private Report report;
 
     public Position() {
     }

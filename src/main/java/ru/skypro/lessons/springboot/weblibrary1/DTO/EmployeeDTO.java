@@ -1,5 +1,9 @@
 package ru.skypro.lessons.springboot.weblibrary1.DTO;
 
+import lombok.Builder;
+import lombok.Data;
+import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
+
 import lombok.Data;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 @Data
@@ -15,6 +19,9 @@ public class EmployeeDTO {
         employeeDTO.setSalary(employee.getSalary());
         return employeeDTO;
     }
+
+
+
 
     public Employee toEmployee() {
         Employee employee = new Employee();
