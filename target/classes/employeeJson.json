@@ -1,4 +1,5 @@
-{"Employees": [,
+{
   "name": "Петр",
   "salary": "290_000",
+  "position": "JS"
 }

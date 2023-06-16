@@ -9,3 +9,8 @@ GET http://localhost:8080/employee/salary/max
 
 ### Получение всех сотрудников, зарплата которых больше средней
 GET http://localhost:8080/employee/high-salary
+
+### Получение отчета
+POST http://localhost:8080/employees/upload
+### Получение отчета
+POST http://localhost:8080/report

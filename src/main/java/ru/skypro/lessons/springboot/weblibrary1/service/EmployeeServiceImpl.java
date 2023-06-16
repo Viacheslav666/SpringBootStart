@@ -14,6 +14,7 @@ import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,10 +76,10 @@ Page<Employee> employeeDTOS =  employeeRepository.findAll(employeePage);
 
     @Override
     public void upload(MultipartFile file) throws IOException {
-        Employee employee = objectMapper.readValue((JsonParser) file, Employee.class);
+        File file1 = new File("file.json");
+        Files.write(file1.toPath(),file.getBytes());
+        Employee employee = objectMapper.readValue(file1, Employee.class);
         employeeRepository.save(employee);
-
-        ;
     }
 
 }
