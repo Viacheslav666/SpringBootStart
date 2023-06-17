@@ -1,5 +1,4 @@
 package ru.skypro.lessons.springboot.weblibrary1.service;
-import aj.org.objectweb.asm.TypeReference;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.EqualsAndHashCode;
@@ -76,11 +75,12 @@ Page<Employee> employeeDTOS =  employeeRepository.findAll(employeePage);
     }
 
     @Override
-    public void upload(MultipartFile file) throws IOException {
+    public void upload(MultipartFile multipartFile) throws IOException {
+        File file = new File("new.json");
+        Files.write(file.toPath(), multipartFile.getBytes());
         ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<List<Employee>> typeReference = new TypeReference<>() {};
-        List<Employee> employees = objectMapper.readValue(file.getBytes(), typeReference);
-        employeeRepository.saveAll(employees);
+        Employee employee = objectMapper.readValue(file, Employee.class);
+        employeeRepository.save(employee);
     }
 
 }
