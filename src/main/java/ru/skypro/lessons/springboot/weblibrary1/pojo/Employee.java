@@ -20,9 +20,14 @@ public class Employee {
     private String name;
     @Lob
     private int salary;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_position")
     private Position position;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_report")
+    private Report report;
+
+
 
 
 }

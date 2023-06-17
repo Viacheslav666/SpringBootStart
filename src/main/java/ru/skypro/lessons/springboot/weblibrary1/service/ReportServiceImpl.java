@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
+import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
 
@@ -28,20 +29,16 @@ public class  ReportServiceImpl implements ReportService {
     public ReportRepository reportRepository;
     ObjectMapper objectMapper = new ObjectMapper();
 
-
     @Override
-    public int createReport() {
+    public int createReport() throws IOException {
        List<ReportDTO> reportDTOS = reportRepository.createReport();
-        try {
             String json = objectMapper.writeValueAsString(reportDTOS);
             String pathJson = saveReportToFile(json);
             Report report = new Report();
             report.setFilePath(pathJson);
             reportRepository.save(report);
          return report.getId();
-        }  catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } return 0;
+
 
     }
 
