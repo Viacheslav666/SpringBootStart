@@ -5,24 +5,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.FullInfo;
-import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeService;
-import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeServiceImpl;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/admin/employees")
 
-public class EmployeeController {
+public class AdminEmployeeController {
     public final EmployeeService
             employeeService;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public AdminEmployeeController(EmployeeService employeeService) {
         this.employeeService =  employeeService;
 
     }
@@ -48,6 +44,12 @@ public class EmployeeController {
     public List<EmployeeDTO> getEmployeeWithPaging(@RequestParam("page") int page) {
         return employeeService.getEmployeeWithPaging(page);
     }
+    @PostMapping(value = "upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    public void upload(@RequestParam("file") MultipartFile file) throws IOException {
+       employeeService.upload(file);
+
+     }
 
 }
 
