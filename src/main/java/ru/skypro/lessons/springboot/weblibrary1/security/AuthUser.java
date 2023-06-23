@@ -12,12 +12,12 @@ public class AuthUser {
 
 
     @Id
-
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false, unique = true)
     private String password;
 
     @JoinColumn(name = "user_id")

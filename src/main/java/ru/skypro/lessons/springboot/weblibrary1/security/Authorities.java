@@ -6,12 +6,13 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "role")
+@Table(name = "roleUser")
 public class Authorities {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int id;
-    @Column
+
+    @Column(nullable = false, unique = true)
     private String role;
 }
