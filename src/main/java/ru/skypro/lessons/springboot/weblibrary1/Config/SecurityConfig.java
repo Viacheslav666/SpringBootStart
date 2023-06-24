@@ -52,21 +52,6 @@ public class SecurityConfig {
 
 
     }
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-    @Bean
-    public UserDetailsManager userDetailsManager(DataSource dataSource,
-                                                 AuthenticationManager authenticationManager) {
-
-
-        JdbcUserDetailsManager jdbcUserDetailsManager =
-                new JdbcUserDetailsManager(dataSource);
-
-        jdbcUserDetailsManager.setAuthenticationManager(authenticationManager);
-        return jdbcUserDetailsManager;}
         @Bean
         public PasswordEncoder passwordEncoder () {
             return new BCryptPasswordEncoder();
