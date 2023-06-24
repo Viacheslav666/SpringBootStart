@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.skypro.lessons.springboot.weblibrary1.mappers.AuthUserMapper;
 import ru.skypro.lessons.springboot.weblibrary1.repository.UserRepository;
 
 @Service
@@ -14,17 +13,16 @@ import ru.skypro.lessons.springboot.weblibrary1.repository.UserRepository;
 @RequiredArgsConstructor
 public class SecurityUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final   SecurityUserPrincipal securityUserPrincipal;
-    private final AuthUserMapper mapper;
-
 
 
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-     var user =  userRepository.findByUsername(name)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        AuthUser user = userRepository.findByUsername(username);
+        if(user ==null)
+        {
+            throw new UsernameNotFoundException(username);
+        }
+        return new  SecurityUserPrincipal(user);
 
-                .orElseThrow(()->new IllegalArgumentException("Пользовательр не найден"));
-     securityUserPrincipal.setUserDto(mapper.toDo(user));
-         return  securityUserPrincipal;
     }
 }

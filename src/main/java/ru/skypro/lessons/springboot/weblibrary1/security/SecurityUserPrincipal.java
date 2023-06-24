@@ -8,43 +8,37 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
 public class SecurityUserPrincipal implements UserDetails {
-    private AuthUserDto userDto;
-    public void setUserDto(AuthUserDto authUserDto) {
-        this.userDto = authUserDto;
+    private String userName;
+    private String password;
+    private List<SecurityGrandAth> securityGrandAthList;
+
+    public SecurityUserPrincipal(AuthUser user) {
+        this.userName = user.getUsername();
+        this.password =  user.getPassword();
+        this.securityGrandAthList = user.getAuthorityList().stream()
+                .map(SecurityGrandAth::new)
+                .toList();
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Optional.ofNullable(userDto)
-
-                .map(AuthUserDto::getRole)
-                .map(role -> "ROLE" + role)
-                .map(SimpleGrantedAuthority::new)
-                .map(List::of)
-                .orElse(Collections.emptyList());
+        return new ArrayList<>(securityGrandAthList);
     }
-
     @Override
     public String getPassword() {
-        return Optional.ofNullable(userDto)
-                .map(AuthUserDto::getPassword)
-                .orElse(null);
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return Optional.ofNullable(userDto)
-                .map(AuthUserDto::getName)
-                .orElse(null);
+        return userName;
     }
 
     @Override

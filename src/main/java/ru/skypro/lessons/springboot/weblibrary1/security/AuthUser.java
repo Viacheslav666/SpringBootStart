@@ -18,10 +18,11 @@ public class AuthUser {
 
     @Column(nullable = false, unique = true)
     private String username;
-    @Column(nullable = false, unique = true)
-    private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
-    private Role role;
+    private String password;
+    private boolean enabled;
+
+    @JoinColumn(name = "role_id")
+    @OneToMany(fetch = FetchType.EAGER)
+    private List <Authority> authorityList;
 }

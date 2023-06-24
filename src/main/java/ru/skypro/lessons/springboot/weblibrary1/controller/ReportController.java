@@ -19,11 +19,9 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Report> getReportById(@PathVariable int id) {
         return reportService.upload(id);
     }
+
 }

@@ -22,7 +22,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import ru.skypro.lessons.springboot.weblibrary1.security.Role;
+
 
 import javax.sql.DataSource;
 
@@ -30,27 +30,53 @@ import javax.sql.DataSource;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final UserDetailsService userDetailsService;
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return authenticationProvider;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
-        return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults())
-                .sessionManagement(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults())
-                .authorizeHttpRequests(matcherRegistry -> matcherRegistry
-                        .requestMatchers(HttpMethod.POST, "/employee/**", "/report/**")
-                        .hasRole(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.PUT, "/employee/**", "/report/**")
-                        .hasRole(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.DELETE, "/employee/**", "/report/**")
-                        .hasRole(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.GET, "/employee/**", "/report/**")
-                        .hasAnyRole(Role.ADMIN.name(), Role.USER.name())
-                        .requestMatchers("/**").permitAll())
-                .build();
+        httpSecurity.csrf()
+                .disable()
+                .authorizeHttpRequests(this::customizeRequest);
+        return httpSecurity.build();
+    }
 
+    private void customizeRequest(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
+        try {
+            registry.requestMatchers(new AntPathRequestMatcher("/admin/**"))
+                    .hasAnyRole("ADMIN")  // Только для пользователей с ролью ADMIN.
+                    .requestMatchers(new AntPathRequestMatcher("/**"))
+                    .hasAnyRole("USER")   // Только для пользователей с ролью USER.
+                    .and()
+                    .formLogin().permitAll()  // Разрешаем всем доступ к форме ввода.
+                    .and()
+                    .logout().logoutUrl("/logout");  // Устанавливаем URL
+            // для выхода из системы.
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @Bean
+    public UserDetailsManager userDetailsManager(DataSource dataSource,
+                                                 AuthenticationManager authenticationManager) {
+
+        JdbcUserDetailsManager jdbcUserDetailsManager =
+                new JdbcUserDetailsManager(dataSource);
+
+        jdbcUserDetailsManager.setAuthenticationManager(authenticationManager);
+        return jdbcUserDetailsManager;
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
         @Bean
         public PasswordEncoder passwordEncoder () {

@@ -6,7 +6,7 @@ import ru.skypro.lessons.springboot.weblibrary1.security.AuthUser;
 
 import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<AuthUser, Integer> {
+public interface UserRepository extends JpaRepository<AuthUser, Integer> {
 
-    Optional <AuthUser> findByUsername(String username);
+  AuthUser findByUsername(String username);
 }

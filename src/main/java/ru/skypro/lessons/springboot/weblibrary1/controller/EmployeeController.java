@@ -48,6 +48,10 @@ public class EmployeeController {
     public List<EmployeeDTO> getEmployeeWithPaging(@RequestParam("page") int page) {
         return employeeService.getEmployeeWithPaging(page);
     }
+    @PostMapping(value = "upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    public void upload(@RequestParam("file") MultipartFile file) throws IOException {
+        employeeService.upload(file); }
 
 }
 
