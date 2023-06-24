@@ -30,6 +30,7 @@ import javax.sql.DataSource;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
@@ -54,73 +55,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
-
-
-//    @Autowired
-//    private final UserDetailsService userDetailsService;
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Bean
-//    public DaoAuthenticationProvider authProvider(PasswordEncoder passwordEncoder) {
-//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//        authProvider.setUserDetailsService(userDetailsService);
-//        authProvider.setPasswordEncoder(passwordEncoder());
-//        return authProvider;
-//    }
-//
-//
-//    @Bean
-//    public UserDetailsManager userDetailsManager(DataSource dataSource,
-//                                                 AuthenticationManager authenticationManager) {
-//
-//
-//        JdbcUserDetailsManager jdbcUserDetailsManager =
-//                new JdbcUserDetailsManager(dataSource);
-//
-//        jdbcUserDetailsManager.setAuthenticationManager(authenticationManager);
-//        return jdbcUserDetailsManager;
-//    }
-//
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-//            throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//
-//        http.csrf()
-//                .disable()
-//                .authorizeHttpRequests(this::customizeRequest);
-//        return http.build();
-//    }
-//
-//    private void customizeRequest(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
-//        try {
-//            registry.requestMatchers(new AntPathRequestMatcher("/admin/**"))
-//                    .hasAnyRole("ADMIN")
-//
-//
-//                    .requestMatchers(new AntPathRequestMatcher("/**"))
-//                    .hasAnyRole("USER")
-//                    .and()
-//                    .formLogin().permitAll()
-//                    .and()
-//                    .logout().logoutUrl("/logout");
-//
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
 
 
 }
