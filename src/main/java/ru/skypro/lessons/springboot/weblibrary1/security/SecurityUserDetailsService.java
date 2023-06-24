@@ -14,9 +14,8 @@ import ru.skypro.lessons.springboot.weblibrary1.repository.UserRepository;
 @RequiredArgsConstructor
 public class SecurityUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
-    private  SecurityUserPrincipal securityUserPrincipal;
-    private final AuthUserDto authUserDto;
-    private AuthUserMapper mapper;
+    private final   SecurityUserPrincipal securityUserPrincipal;
+    private final AuthUserMapper mapper;
 
 
 

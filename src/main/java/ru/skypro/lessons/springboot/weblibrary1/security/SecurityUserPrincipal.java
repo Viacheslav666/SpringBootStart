@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +15,8 @@ import java.util.Optional;
 
 @Data
 @AllArgsConstructor
-
+@NoArgsConstructor
+@Component
 public class SecurityUserPrincipal implements UserDetails {
     private AuthUserDto userDto;
     public void setUserDto(AuthUserDto authUserDto) {
@@ -23,6 +25,7 @@ public class SecurityUserPrincipal implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Optional.ofNullable(userDto)
+
                 .map(AuthUserDto::getRole)
                 .map(role -> "ROLE" + role)
                 .map(SimpleGrantedAuthority::new)
