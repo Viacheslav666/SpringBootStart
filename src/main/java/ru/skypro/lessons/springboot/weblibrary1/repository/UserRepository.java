@@ -1,10 +1,12 @@
 package ru.skypro.lessons.springboot.weblibrary1.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import ru.skypro.lessons.springboot.weblibrary1.security.AuthUser;
 
-public interface UserRepository extends JpaRepository<AuthUser, Integer> {
+import java.util.Optional;
 
-    AuthUser findByUsername(String username);
+public interface UserRepository extends CrudRepository<AuthUser, Integer> {
+
+    Optional <AuthUser> findByUsername(String username);
 }

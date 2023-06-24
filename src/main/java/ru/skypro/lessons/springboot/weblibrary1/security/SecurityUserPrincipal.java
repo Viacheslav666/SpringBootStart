@@ -1,35 +1,47 @@
 package ru.skypro.lessons.springboot.weblibrary1.security;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Data
+@AllArgsConstructor
+
 public class SecurityUserPrincipal implements UserDetails {
-    private AuthUser user;
-
-    public SecurityUserPrincipal(AuthUser user) {
-        this.user = user;
+    private AuthUserDto userDto;
+    public void setUserDto(AuthUserDto authUserDto) {
+        this.userDto = authUserDto;
     }
-
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Optional.ofNullable(userDto)
+                .map(AuthUserDto::getRole)
+                .map(role -> "ROLE" + role)
+                .map(SimpleGrantedAuthority::new)
+                .map(List::of)
+                .orElse(Collections.emptyList());
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return Optional.ofNullable(userDto)
+                .map(AuthUserDto::getPassword)
+                .orElse(null);
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return Optional.ofNullable(userDto)
+                .map(AuthUserDto::getName)
+                .orElse(null);
     }
 
     @Override
