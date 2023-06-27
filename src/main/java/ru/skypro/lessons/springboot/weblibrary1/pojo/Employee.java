@@ -2,6 +2,7 @@ package ru.skypro.lessons.springboot.weblibrary1.pojo;
 
 import jakarta.persistence.*;
 import lombok.*;
+@Builder(toBuilder = true)
 
 @EqualsAndHashCode
 @AllArgsConstructor
@@ -15,11 +16,18 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Lob
     private String name;
+    @Lob
     private int salary;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_position")
     private Position position;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_report")
+    private Report report;
+
+
 
 
 }

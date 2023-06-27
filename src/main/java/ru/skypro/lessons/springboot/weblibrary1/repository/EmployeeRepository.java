@@ -22,10 +22,23 @@ public interface EmployeeRepository extends CrudRepository<Employee,Integer>,
             nativeQuery = true)
     List<Employee> getEmployeesByName(@Param("name") Optional position  );
 
+
+
     @Query(value = "SELECT new ru.skypro.lessons.springboot.weblibrary1. " +
             "FullInfo(e.name , e.salary , p.position) " +
             "FROM Employee e join fetch Position p " +
             "WHERE  id = :id",
             nativeQuery = true)
             List<Employee> getEmployeesFullInfo(@Param("id") int id);
+
+    @Query(value = "SELECT e.name FROM Employee e")
+    String getEmployeeByName();
+
+    @Query(value = "SELECT max(e.salary) from Employee e")
+    int getMaxSalary();
+    @Query(value = "SELECT min (e.salary) from Employee e")
+    int getMinSalary();
+    @Query(value = "SELECT avg(e.salary) from Employee e")
+    int getAvgSalary();
+
 }
