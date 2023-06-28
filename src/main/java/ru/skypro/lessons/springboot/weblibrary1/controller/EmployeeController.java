@@ -19,8 +19,7 @@ import java.util.Optional;
 @RequestMapping("/employees")
 
 public class EmployeeController {
-    public final EmployeeService
-            employeeService;
+    public final EmployeeService employeeService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService =  employeeService;
