@@ -38,10 +38,6 @@ public class EmployeeServiceImpl implements EmployeeService{
    Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
     @Value("${app.env}")
     private String test;
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
-
 
     @Override
     public void addEmployee(Employee employee) {

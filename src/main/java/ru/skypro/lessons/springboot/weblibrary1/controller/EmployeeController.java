@@ -1,5 +1,7 @@
 package ru.skypro.lessons.springboot.weblibrary1.controller;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,14 +19,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/employees")
+@NoArgsConstructor(force = true)
 
 public class EmployeeController {
     public final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService =  employeeService;
 
-    }
 
     @GetMapping("/withHighestSalary")
     public List<EmployeeDTO> withHighestSalary() {
