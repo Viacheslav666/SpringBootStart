@@ -14,7 +14,7 @@ public class AuthUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -22,7 +22,8 @@ public class AuthUser {
     private String password;
     private boolean enabled;
 
-    @JoinColumn(name = "role_id")
+
     @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_role1")
     private List <Authority> authorityList;
 }

@@ -19,7 +19,6 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Lob
     @Column(name = "name", columnDefinition = "text")
     private String filePath;
 
