@@ -11,7 +11,7 @@ public class SecurityGrandAth implements GrantedAuthority {
         }}
         @Override
         public String getAuthority () {
-            return this.role;
+            return String.valueOf(this.role);
         }
 
 }
