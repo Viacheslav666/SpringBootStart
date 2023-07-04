@@ -16,9 +16,7 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Lob
     private String name;
-    @Lob
     private int salary;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_position")

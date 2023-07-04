@@ -40,29 +40,28 @@ public class SecurityConfig {
         return authenticationProvider;
     }
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
-        httpSecurity.csrf()
-                .disable()
-                .authorizeHttpRequests(this::customizeRequest);
-        return httpSecurity.build();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/*"))
+                .authorizeHttpRequests(this::customizeRequest)
+                .formLogin(Customizer.withDefaults())
+                .logout(Customizer.withDefaults());
+        return http.build();
     }
 
-    private void customizeRequest(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
+    private void customizeRequest(
+            AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
         try {
-            registry.requestMatchers(new AntPathRequestMatcher("/admin/**"))
-                    .hasAnyRole("ADMIN")  // Только для пользователей с ролью ADMIN.
-                    .requestMatchers(new AntPathRequestMatcher("/**"))
-                    .hasAnyRole("USER")   // Только для пользователей с ролью USER.
-                    .and()
-                    .formLogin().permitAll()  // Разрешаем всем доступ к форме ввода.
-                    .and()
-                    .logout().logoutUrl("/logout");  // Устанавливаем URL
-            // для выхода из системы.
-
+            registry.requestMatchers(HttpMethod.GET,"/employee/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.POST,"/employee/**").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT,"/employee/**").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE,"/employee/**").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET,"/report/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.POST,"/report/**").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT,"/report/**").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE,"/report/**").hasAnyRole("ADMIN");
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
+        }}
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource,
                                                  AuthenticationManager authenticationManager) {
@@ -82,7 +81,5 @@ public class SecurityConfig {
         public PasswordEncoder passwordEncoder () {
             return new BCryptPasswordEncoder();
         }
-
-
 
 }

@@ -1,5 +1,6 @@
 package ru.skypro.lessons.springboot.weblibrary1.service;
 
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.FullInfo;
