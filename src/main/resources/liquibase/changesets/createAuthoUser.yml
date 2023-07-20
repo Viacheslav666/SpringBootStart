@@ -29,10 +29,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: id_role1
+                  name: id_role
                   type: int
                   constraints:
-                    foreignKeyName: role
+                    foreignKeyName: role1
 
 
 

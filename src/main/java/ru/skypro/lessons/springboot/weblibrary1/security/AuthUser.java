@@ -24,6 +24,6 @@ public class AuthUser {
 
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_role1")
+    @JoinColumn(name = "id_role")
     private List <Authority> authorityList;
 }

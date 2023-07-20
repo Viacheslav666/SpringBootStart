@@ -17,9 +17,6 @@ public class EmployeeDTO {
         return employeeDTO;
     }
 
-
-
-
     public Employee toEmployee() {
         Employee employee = new Employee();
         employee.setId(this.getId());

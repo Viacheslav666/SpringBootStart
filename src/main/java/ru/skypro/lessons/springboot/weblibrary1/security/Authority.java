@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id_role;
 
     @Column(nullable = false, unique = true)
     private String role;
