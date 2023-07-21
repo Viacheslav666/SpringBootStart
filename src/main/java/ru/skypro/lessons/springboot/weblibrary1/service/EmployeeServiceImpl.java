@@ -39,7 +39,10 @@ public class EmployeeServiceImpl implements EmployeeService{
     private String test;
 
 
+    @Override
+    public void addEmployee(Employee employee) {
 
+    }
 
     @Override
     public List<EmployeeDTO> getAllEmployees() {

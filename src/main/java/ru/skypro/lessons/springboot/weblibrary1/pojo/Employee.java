@@ -3,7 +3,6 @@ package ru.skypro.lessons.springboot.weblibrary1.pojo;
 import jakarta.persistence.*;
 import lombok.*;
 @Builder(toBuilder = true)
-
 @EqualsAndHashCode
 @AllArgsConstructor
 @Getter
@@ -11,6 +10,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @Entity
+@Data
 @Table(name = "employee")
 public class Employee {
     @Id
