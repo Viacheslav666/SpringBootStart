@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
@@ -44,35 +45,30 @@ public class ReportServiceImplTest {
     private final Report rep = new Report();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public ReportServiceImplTest(ReportRepository reportRepositoryMock) {
-
-    }
-
     @Test
     public void CreateReport_OK() throws IOException {
 
         List<ReportDTO> reportDTOS = new ArrayList<>();
         ReportDTO reportDTO = ReportDTO.builder()
                 .id(1)
-                .name(pos).build();
+                .name(pos)
+                .build();
         reportDTOS.add(reportDTO);
         when(reportRepositoryMock.createReport()).thenReturn(reportDTOS);
 
-        int reportId = reportServiceTest.createReport();
         assertEquals(reportRepositoryMock.count(), 0);
+        verify(reportRepositoryMock, Mockito.times(1)).createReport();
     }
-    @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3})
-    public void Upload_Ok(int id) {
-        ResponseEntity<Report> mockResponse = mock(ResponseEntity.class);
-        Report mockReport = mock(Report.class);
-        when(reportRepositoryMock.readReportById(id)).thenReturn(mockResponse);
-        when(mockResponse.getBody()).thenReturn(reportMock);
-        ReportServiceImplTest reportServiceImplTest = new ReportServiceImplTest(reportRepositoryMock);
-        ResponseEntity<Report> result = reportServiceImplTest.reportServiceTest.upload(id);
-        assertEquals(mockResponse, result);
-        assertEquals(reportMock, result.getBody());
-    }
+   @Test
+        @ValueSource(ints = {1, 2, 3})
+        public void Upload_Ok(int id) {
+            ResponseEntity<Report> mockResponse = mock(ResponseEntity.class);
+            when(reportRepositoryMock.readReportById(id)).thenReturn(mockResponse);
+            when(mockResponse.getBody()).thenReturn(reportMock);
+            ResponseEntity<Report> result = reportServiceTest.upload(id);
+            assertEquals(mockResponse, result);
+            assertEquals(reportMock, result.getBody());
+        }
 
 
 

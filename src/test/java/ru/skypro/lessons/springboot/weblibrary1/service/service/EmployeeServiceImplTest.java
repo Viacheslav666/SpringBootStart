@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -109,35 +110,35 @@ class EmployeeServiceImplTest {
         assertEquals(employees.size(), fullInfos.size());
     }
 
-//    @Test
-//    void getEmployeeWithPaging_OK() {
-//        int pageIndex = 1;
-//        int pageSize = 10;
-//        List<Employee> employees = new ArrayList<>();
-//        employees.add(new Employee(1, "Kir", 200000, pos, rep));
-//        employees.add(new Employee(2, "Slava", 30000, pos1, rep));
-//        Page<Employee> employeePage = new PageImpl<>(employees);
-//        when(employeeRepositoryMock.findAll(any(Pageable.class)).thenReturn(employeePage));
-//        List<EmployeeDTO> expectedEmployeeDTOList = employees.stream()
-//                .map(EmployeeDTO::fromEmployee)
-//                .collect(Collectors.toList());
-//
-//        List<EmployeeDTO> actualEmployeeDTOList = employeeServiceTest.getEmployeeWithPaging(pageIndex);
-//
-//        assertEquals(expectedEmployeeDTOList, actualEmployeeDTOList);
-//    }
-//
-//    @Test
-//    void upload_NO_OK_Exception() throws IOException {
-//        MockMultipartFile mockMultipartFile = new MockMultipartFile(
-//                "multipartFile",
-//                "filename.txt",
-//                "application/json",
-//                "{\"id\" \":111\",\"name\": \"Kir\", \"salary\": 20000\",\"position:\"JS\"}".getBytes());
-//
-//        employeeServiceTest.upload(mockMultipartFile);
-//        assertThrows(IOException.class, () -> employeeServiceTest.upload(mockMultipartFile));
-//    }
+    @Test
+    void getEmployeeWithPaging_OK() {
+        int pageIndex = 1;
+        int pageSize = 10;
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(1, "Kir", 200000, pos, rep));
+        employees.add(new Employee(2, "Slava", 30000, pos1, rep));
+        Page<Employee> employeePage = new PageImpl<>(employees);
+        when(employeeRepositoryMock.findAll(any(Pageable.class)).thenReturn(employeePage));
+        List<EmployeeDTO> expectedEmployeeDTOList = employees.stream()
+                .map(EmployeeDTO::fromEmployee)
+                .collect(Collectors.toList());
+
+        List<EmployeeDTO> actualEmployeeDTOList = employeeServiceTest.getEmployeeWithPaging(pageIndex);
+
+        assertEquals(expectedEmployeeDTOList, actualEmployeeDTOList);
+    }
+
+    @Test
+    void upload_NO_OK_Exception() throws IOException {
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(
+                "multipartFile",
+                "filename.txt",
+                "application/json",
+                "{\"id\" \":111\",\"name\": \"Kir\", \"salary\": 20000\",\"position:\"JS\"}".getBytes());
+
+        employeeServiceTest.upload(mockMultipartFile);
+        assertThrows(IOException.class, () -> employeeServiceTest.upload(mockMultipartFile));
+    }
 
 
 }
