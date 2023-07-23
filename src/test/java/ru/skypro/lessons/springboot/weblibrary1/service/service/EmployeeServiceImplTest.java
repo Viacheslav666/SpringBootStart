@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.ArgumentMatchers.any;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +28,6 @@ import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeServiceImpl;
-
-
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,8 +35,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static net.bytebuddy.matcher.ElementMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -118,7 +115,7 @@ class EmployeeServiceImplTest {
         employees.add(new Employee(1, "Kir", 200000, pos, rep));
         employees.add(new Employee(2, "Slava", 30000, pos1, rep));
         Page<Employee> employeePage = new PageImpl<>(employees);
-        when(employeeRepositoryMock.findAll(any(Pageable.class)).thenReturn(employeePage));
+        when(employeeRepositoryMock.findAll(any(Pageable.class))).thenReturn(employeePage);
         List<EmployeeDTO> expectedEmployeeDTOList = employees.stream()
                 .map(EmployeeDTO::fromEmployee)
                 .collect(Collectors.toList());
@@ -136,7 +133,6 @@ class EmployeeServiceImplTest {
                 "application/json",
                 "{\"id\" \":111\",\"name\": \"Kir\", \"salary\": 20000\",\"position:\"JS\"}".getBytes());
 
-        employeeServiceTest.upload(mockMultipartFile);
         assertThrows(IOException.class, () -> employeeServiceTest.upload(mockMultipartFile));
     }
 
