@@ -38,12 +38,11 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Value("${app.env}")
     private String test;
 
+
     @Override
     public void addEmployee(Employee employee) {
-        logger.info("Was invoked method for create employee:{} ",employee);
-        employeeRepository.save(employee);
-    }
 
+    }
 
     @Override
     public List<EmployeeDTO> getAllEmployees() {
@@ -72,7 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public List<FullInfo> fullInfo(int id) {
-        logger.info("Was invoked method for create employee:{} ",id);
+            logger.info("Was invoked method for create employee:{} ",id);
         return employeeRepository.getEmployeesFullInfo(id).stream()
                 .map(FullInfo::fromEmployeeFullInfo)
                 .collect(Collectors.toList());

@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: one
-      author: G1
+      author: Galkin
       changes:
         - createTable:
             tableName: report

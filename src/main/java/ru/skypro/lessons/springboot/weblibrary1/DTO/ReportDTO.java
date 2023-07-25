@@ -1,9 +1,6 @@
 package ru.skypro.lessons.springboot.weblibrary1.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
@@ -12,6 +9,7 @@ import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
 @NoArgsConstructor
 @Data
 @ToString
+@Builder(toBuilder = true)
 
 public class ReportDTO {
     public ReportRepository reportRepository;

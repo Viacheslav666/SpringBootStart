@@ -1,13 +1,13 @@
 databaseChangeLog:
   - changeSet:
       id: one
-      author: G1
+      author: Galkin
       changes:
         - createTable:
             tableName: role1
             columns:
               - column:
-                  name: id
+                  name: id_role
                   type: int
                   autoIncrement: true
                   constraints:

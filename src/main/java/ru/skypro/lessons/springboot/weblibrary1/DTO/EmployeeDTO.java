@@ -9,6 +9,8 @@ public class EmployeeDTO {
     private String name;
     private Integer salary;
 
+
+
     public static EmployeeDTO fromEmployee(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setId(employee.getId());
@@ -16,9 +18,6 @@ public class EmployeeDTO {
         employeeDTO.setSalary(employee.getSalary());
         return employeeDTO;
     }
-
-
-
 
     public Employee toEmployee() {
         Employee employee = new Employee();
