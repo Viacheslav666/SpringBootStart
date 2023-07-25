@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.client.ExpectedCount.times;
+
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceImplTest {
@@ -46,7 +46,7 @@ public class ReportServiceImplTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void CreateReport_OK() throws IOException {
+    void CreateReport_OK() throws IOException {
 
         List<ReportDTO> reportDTOS = new ArrayList<>();
         ReportDTO reportDTO = ReportDTO.builder()
@@ -55,13 +55,15 @@ public class ReportServiceImplTest {
                 .build();
         reportDTOS.add(reportDTO);
         when(reportRepositoryMock.createReport()).thenReturn(reportDTOS);
-
-        assertEquals(reportRepositoryMock.count(), 0);
-        verify(reportRepositoryMock, Mockito.times(1)).createReport();
+        assertEquals(1,reportRepositoryMock.count());
+        verify(reportRepositoryMock, times(1)).createReport();
     }
+
+
+
    @Test
         @ValueSource(ints = {1, 2, 3})
-        public void Upload_Ok(int id) {
+        void Upload_Ok(int id) {
             ResponseEntity<Report> mockResponse = mock(ResponseEntity.class);
             when(reportRepositoryMock.readReportById(id)).thenReturn(mockResponse);
             when(mockResponse.getBody()).thenReturn(reportMock);
