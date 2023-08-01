@@ -30,7 +30,7 @@ import java.util.List;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class employeeIntegationTest {
+public class EmployeeIntegationTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -40,8 +40,8 @@ public class employeeIntegationTest {
         Position position2 = new Position(2, "Piton");
         List<Employee> employeeList = List.of(
                 new Employee(1, "Kirill", 20000, position2, new Report(1,"file")),
-                new Employee(1, "Slava", 200050, position, new Report(2,"file2")),
-                new Employee(1, "Daria", 200100, position2, new Report(3, "file3"))
+                new Employee(2, "Slava", 200050, position, new Report(2,"file2")),
+                new Employee(3, "Daria", 200100, position2, new Report(3, "file3"))
         );
         employeeRepository.saveAll(employeeList);
     }
@@ -60,7 +60,7 @@ public class employeeIntegationTest {
     @Test
     void employeesPositionTest() throws Exception {
         mockMvc.perform(get("/employees")
-                        .content("Java"))
+                        .param("position","Java"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.").isArray())
                 .andExpect(jsonPath("$.length()").value(1))

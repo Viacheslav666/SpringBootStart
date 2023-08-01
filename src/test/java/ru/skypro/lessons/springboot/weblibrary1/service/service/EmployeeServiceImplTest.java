@@ -46,8 +46,10 @@ import static ru.skypro.lessons.springboot.weblibrary1.service.constants.Employe
 class EmployeeServiceImplTest {
     public static final Position pos = new Position(1, "Java");
     public static final Position pos1 = new Position(1, "Java");
+    private static final Employee employee = new Employee(1, "Kirill", 20000, pos, new Report(1,"file"));
+    private static final EmployeeDTO employeeDTO = EmployeeDTO.fromEmployee(employee);
     public static final Report rep = new Report();
-    private static EmployeeDTO employeeDto;
+
     private static FullInfo fullInfo;
     private static ObjectMapper objectMapper = new ObjectMapper();
     @Mock
@@ -67,17 +69,12 @@ class EmployeeServiceImplTest {
     }
 
     @Test
-    void withHighestSalary_Ok() {
-        List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee(1, "Kir", 200000, pos, rep));
-        employees.add(new Employee(2, "Slava", 30000, pos, rep));
-        when(employeeRepositoryMock.withHighestSalary()).thenReturn(employees);
-        List<EmployeeDTO> highestPaidEmployees = employees.stream()
-                .map(EmployeeDTO::fromEmployee)
-                .collect(Collectors.toList());
-        List<EmployeeDTO> employeeDTOs = employeeServiceTest.withHighestSalary();
-        verify(employeeRepositoryMock).withHighestSalary();
-        assertEquals(highestPaidEmployees, employeeDTOs);
+
+    void TheHighestSalary_Ok() {
+        when(employeeRepositoryMock.findFirstByOrderBySalaryDesc())
+                .thenReturn(Optional.of(employee));
+        assertEquals(employeeDTO, employeeServiceTest.withHighestSalary());
+
 
     }
 

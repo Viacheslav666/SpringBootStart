@@ -18,15 +18,18 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/employees")
 @NoArgsConstructor(force = true)
+@Data
 
 public class EmployeeController {
-    public  final EmployeeService employeeService;
+    public final EmployeeService employeeService;
 
-
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
 
     @GetMapping("/withHighestSalary")
-    public List<EmployeeDTO> withHighestSalary() {
+    public EmployeeDTO withHighestSalary() {
 
         return employeeService.withHighestSalary();
     }
@@ -43,14 +46,17 @@ public class EmployeeController {
     public List<FullInfo> fullInfo(@PathVariable Integer id) {
         return employeeService.fullInfo(id);
     }
-    @GetMapping( "/page")
+
+    @GetMapping("/page")
     public List<EmployeeDTO> getEmployeeWithPaging(@RequestParam("page") int page) {
         return employeeService.getEmployeeWithPaging(page);
     }
+
     @PostMapping(value = "upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 
-    public  void upload(@RequestParam("file") MultipartFile file) throws IOException {
-        employeeService.upload(file); }
+    public void upload(@RequestParam("file") MultipartFile file) throws IOException {
+        employeeService.upload(file);
+    }
 
 }
 

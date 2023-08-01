@@ -17,7 +17,9 @@ public interface EmployeeRepository extends CrudRepository<Employee,Integer>,
 
     @Query(value = "select * from employee order by salary desc ",
     nativeQuery = true)
-    List<Employee> withHighestSalary();
+    Employee withHighestSalary();
+
+
     @Query(value = "SELECT * FROM employee WHERE name= :name",
             nativeQuery = true)
     List<Employee> getEmployeesByName(@Param("name") Optional position  );

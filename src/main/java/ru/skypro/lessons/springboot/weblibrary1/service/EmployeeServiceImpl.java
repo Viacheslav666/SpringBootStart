@@ -52,12 +52,12 @@ public class EmployeeServiceImpl implements EmployeeService{
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public List<EmployeeDTO> withHighestSalary() {
-        logger.info("Was invoked method for withHighestSalary");
-       return employeeRepository.withHighestSalary().stream()
-               .map(EmployeeDTO::fromEmployee)
-               .collect(Collectors.toList());
+    public EmployeeDTO withHighestSalary() {
+        EmployeeDTO employeeDTO = EmployeeDTO.fromEmployee(employeeRepository.withHighestSalary());
+        logger.debug("Received the employee {} with the highest salary", employeeDTO);
+        return employeeDTO;
     }
 
     @Override

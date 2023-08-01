@@ -14,7 +14,7 @@ public interface EmployeeService {
     public void addEmployee(Employee employee);
     public  List<EmployeeDTO> getAllEmployees();
 
-    public List<EmployeeDTO> withHighestSalary();
+    public EmployeeDTO  withHighestSalary();
     public List<EmployeeDTO> employeesPosition(Optional position);
     public List<FullInfo> fullInfo(int id);
     public List<EmployeeDTO> getEmployeeWithPaging(int pageIndex);
