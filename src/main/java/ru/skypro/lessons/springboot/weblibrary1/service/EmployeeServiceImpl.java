@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
@@ -24,12 +25,9 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@EqualsAndHashCode
-@ToString
-@Data
+
 @Service
-@Profile("test")
-@NoArgsConstructor
+
 public class EmployeeServiceImpl implements EmployeeService{
    @Autowired
     public EmployeeRepository employeeRepository;
@@ -41,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public void addEmployee(Employee employee) {
-
+ employeeRepository.save(employee);
     }
 
     @Override
@@ -55,7 +53,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public EmployeeDTO withHighestSalary() {
-        EmployeeDTO employeeDTO = EmployeeDTO.fromEmployee(employeeRepository.withHighestSalary());
+        EmployeeDTO employeeDTO = EmployeeDTO.fromEmployee(employeeRepository
+                .withHighestSalary()
+                .orElseThrow());
         logger.debug("Received the employee {} with the highest salary", employeeDTO);
         return employeeDTO;
     }

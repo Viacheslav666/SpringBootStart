@@ -1,6 +1,7 @@
 package ru.skypro.lessons.springboot.weblibrary1.service;
 
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.FullInfo;
@@ -9,7 +10,7 @@ import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
+@Component
 public interface EmployeeService {
     public void addEmployee(Employee employee);
     public  List<EmployeeDTO> getAllEmployees();

@@ -3,12 +3,14 @@ package ru.skypro.lessons.springboot.weblibrary1.controller;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.FullInfo;
-import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeService;
 
 import java.io.IOException;
@@ -17,16 +19,16 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/employees")
-@NoArgsConstructor(force = true)
-@Data
+
 
 public class EmployeeController {
-    public final EmployeeService employeeService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
-
 
     @GetMapping("/withHighestSalary")
     public EmployeeDTO withHighestSalary() {

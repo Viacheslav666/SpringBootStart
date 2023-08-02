@@ -4,11 +4,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 
 import java.util.List;
 import java.util.Optional;
-
+@Repository
 public interface EmployeeRepository extends CrudRepository<Employee,Integer>,
         PagingAndSortingRepository<Employee, Integer> {
     @Query(value = "SELECT e FROM Employee e")
@@ -17,7 +18,7 @@ public interface EmployeeRepository extends CrudRepository<Employee,Integer>,
 
     @Query(value = "select * from employee order by salary desc ",
     nativeQuery = true)
-    Employee withHighestSalary();
+    Optional <Employee> withHighestSalary();
 
 
     @Query(value = "SELECT * FROM employee WHERE name= :name",

@@ -70,8 +70,8 @@ class EmployeeServiceImplTest {
 
     @Test
 
-    void TheHighestSalary_Ok() {
-        when(employeeRepositoryMock.findFirstByOrderBySalaryDesc())
+    void theHighestSalary_Ok() {
+        when(employeeRepositoryMock.withHighestSalary())
                 .thenReturn(Optional.of(employee));
         assertEquals(employeeDTO, employeeServiceTest.withHighestSalary());
 
