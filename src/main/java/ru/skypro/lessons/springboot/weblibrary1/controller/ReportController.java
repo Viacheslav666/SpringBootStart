@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("report")
-@NoArgsConstructor(force = true)
+@RequestMapping("/report")
 public class ReportController {
     public final ReportService  reportService;
 

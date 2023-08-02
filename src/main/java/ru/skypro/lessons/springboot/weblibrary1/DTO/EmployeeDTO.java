@@ -1,13 +1,22 @@
 package ru.skypro.lessons.springboot.weblibrary1.DTO;
 
-import lombok.Data;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
+import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
+import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class EmployeeDTO {
     private Integer id;
     private String name;
     private Integer salary;
+    private Position position;
+    private Report report;
 
 
 

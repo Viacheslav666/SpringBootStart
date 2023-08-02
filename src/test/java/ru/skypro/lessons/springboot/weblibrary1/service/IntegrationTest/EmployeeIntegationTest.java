@@ -1,15 +1,13 @@
 package ru.skypro.lessons.springboot.weblibrary1.service.IntegrationTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.apache.el.stream.Stream;
 import org.json.JSONObject;
@@ -19,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
+import ru.skypro.lessons.springboot.weblibrary1.controller.EmployeeController;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
@@ -43,9 +43,11 @@ public class EmployeeIntegationTest {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    EmployeeRepository employeeRepository;
+    private EmployeeController employeeController;
     @Autowired
-    private EmployeeFileService employeeFileService;
+    private EmployeeRepository repository;
+    @Autowired
+    EmployeeRepository employeeRepository;
 
 
     @BeforeEach
@@ -64,13 +66,10 @@ public class EmployeeIntegationTest {
 
     @Test
     void getEmployeesWithSalaryHigherThan () throws Exception {
-
         employeeList();
-        mockMvc.perform(get("/employees/withHighestSalary")
-                .param("compareSalary", String.valueOf(200100)))
+        mockMvc.perform(get("/employees/withHighestSalary"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[2].name").value("Daria"));
+                .andExpect(jsonPath("$[0].name").value("Daria"));
     }
 
     @Test
@@ -91,6 +90,22 @@ public class EmployeeIntegationTest {
         mockMvc.perform(get("/employee/{id}/fullInfo", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Kirill"));
+    }
+
+    @Test
+    void addEmployeeFromFile() throws Exception {
+        employeeList();
+        EmployeeDTO employeeDTO = new EmployeeDTO(4, "Daria", 200100, new Position(4,"Sql"), new Report(3, "file3"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(employeeDTO);
+        MockMultipartFile file = new MockMultipartFile("file", "employee.json", MediaType.MULTIPART_FORM_DATA_VALUE, json.getBytes());
+
+        mockMvc.perform(multipart("/employees/upload")
+                        .file(file))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/employee/{id}", 4))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Petr"));
     }
 
 
