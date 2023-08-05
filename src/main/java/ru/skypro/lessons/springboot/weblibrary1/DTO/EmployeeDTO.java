@@ -16,8 +16,6 @@ public class EmployeeDTO {
     private String name;
     private Integer salary;
     private Position position;
-    private Report report;
-
 
 
     public static EmployeeDTO fromEmployee(Employee employee) {

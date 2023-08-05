@@ -13,9 +13,6 @@ public class Position {
 
     private int id;
     private String position;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_report")
-    private Report report;
 
     public Position() {
     }

@@ -53,9 +53,14 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public EmployeeDTO withHighestSalary() {
+        logger.info("Was invoked method for getting employee with the highest salary");
         EmployeeDTO employeeDTO = EmployeeDTO.fromEmployee(employeeRepository
-                .withHighestSalary()
-                .orElseThrow());
+                        .findFirstByOrderBySalaryDesc()
+                .orElseThrow(() -> {
+                    IllegalArgumentException e = new IllegalArgumentException("Данные в таблице отсутсвуют");
+                    logger.error("There is no employee in DB ", e);
+                    return e;
+                }));
         logger.debug("Received the employee {} with the highest salary", employeeDTO);
         return employeeDTO;
     }

@@ -18,9 +18,5 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
-              - column:
-                  name: id_report
-                  type: int
-                  constraints:
-                    foreignKeyName: report
+
 
