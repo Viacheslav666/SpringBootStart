@@ -1,27 +1,23 @@
 package ru.skypro.lessons.springboot.weblibrary1.pojo;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.Accessors;
+import lombok.*;
 
 
-@Data
-@ToString
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Accessors(chain = true)
 @Table(name = "report")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "name", columnDefinition = "text")
-    private String filePath;
+    private Integer id;
+    @Lob
+    @Column(name = "file", columnDefinition="text")
+    private String file;
 
-    public Report(String json) {
-    }
 }

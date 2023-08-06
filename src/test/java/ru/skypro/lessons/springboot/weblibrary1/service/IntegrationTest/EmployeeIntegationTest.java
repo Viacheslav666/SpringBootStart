@@ -1,16 +1,11 @@
 package ru.skypro.lessons.springboot.weblibrary1.service.IntegrationTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
-import org.apache.el.stream.Stream;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +16,11 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
-import ru.skypro.lessons.springboot.weblibrary1.controller.EmployeeController;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
-import ru.skypro.lessons.springboot.weblibrary1.repository.UserRepository;
-import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeFileService;
 
 import java.util.List;
 
@@ -42,45 +31,49 @@ import java.util.List;
 public class EmployeeIntegationTest {
     @Autowired
     MockMvc mockMvc;
+
+    private final EmployeeRepository repository;
+
     @Autowired
-    private EmployeeController employeeController;
-    @Autowired
-    private EmployeeRepository repository;
-    @Autowired
-    EmployeeRepository employeeRepository;
+    public EmployeeIntegationTest(EmployeeRepository repository) {
+        this.repository = repository;
+    }
 
 
     @BeforeEach
     void employeeList() {
         Report report = new Report(1, "file1");
-        Report report1 =  new Report(2, "file2");
-        Position position = new Position(1, "Java" );
+        Report report1 = new Report(2, "file2");
+        Position position = new Position(1, "Java");
         Position position2 = new Position(2, "Piton");
 
         List<Employee> employeeList = List.of(
-                new Employee(1, "Kirill", 20000, position2, report),
-                new Employee(2, "Slava", 200050, position, report),
-                new Employee(3, "Daria", 200100, position2, report1)
+                new Employee(1, "Kirill", 20000, 1, position),
+                new Employee(2, "Slava", 200050, 2, position2),
+                new Employee(3, "Daria", 200100, 3, position2)
         );
-        employeeRepository.saveAll(employeeList);
+        repository.saveAll(employeeList);
     }
 
 
-
     @Test
-    void getEmployeesWithSalaryHigherThan () throws Exception {
+    void getEmployeesWithSalaryHigherThan() throws Exception {
         employeeList();
         mockMvc.perform(get("/employees/withHighestSalary?salary=200100"))
                 .andExpect(status().isOk())
-
                 .andExpect(jsonPath("$.name").value("Daria"));
     }
 
     @Test
+    void  getTest() throws Exception {
+        mockMvc.perform(get("/employees/test"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void employeesPositionTest() throws Exception {
-        employeeList();
-        mockMvc.perform(get("/employees/")
-                        .param("position", "Java"))
+        mockMvc.perform(get("/employees")
+                        .param("position", String.valueOf(1)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(1))
@@ -89,16 +82,14 @@ public class EmployeeIntegationTest {
 
     @Test
     void getEmployeeByIdFullInfo() throws Exception {
-        employeeList();
-        Integer id = 1;
-        mockMvc.perform(get("/employee/{id}/fullInfo", id))
+
+        mockMvc.perform(get("/employees/1/fullInfo"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Kirill"));
     }
 
     @Test
     void addEmployeeFromFile() throws Exception {
-        employeeList();
         EmployeeDTO employeeDTO = new EmployeeDTO();
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(employeeDTO);
@@ -107,9 +98,9 @@ public class EmployeeIntegationTest {
         mockMvc.perform(multipart("/employees/upload")
                         .file(file))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/employee/{id}", 4))
+        mockMvc.perform(get("/employees/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Petr"));
+                .andExpect(jsonPath("$.name").value("Kirill"));
     }
 
 

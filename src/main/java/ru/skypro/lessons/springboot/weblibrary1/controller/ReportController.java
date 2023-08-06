@@ -1,10 +1,9 @@
 package ru.skypro.lessons.springboot.weblibrary1.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.NoArgsConstructor;
+
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.service.ReportService;
 
@@ -21,7 +20,7 @@ public class ReportController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Report> getReportById(@PathVariable int id) {
+    public ResponseEntity<Resource> upload(@PathVariable int id) {
         return reportService.upload(id);
     }
 

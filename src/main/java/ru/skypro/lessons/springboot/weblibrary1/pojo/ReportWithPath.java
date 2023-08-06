@@ -3,19 +3,16 @@ package ru.skypro.lessons.springboot.weblibrary1.pojo;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
-@Table(name = "position")
+@Table(name = "report_with_path")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Position {
-
+public class ReportWithPath {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private String name;
+    private String Path;
 }

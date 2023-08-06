@@ -42,15 +42,15 @@ public class ReportTest {
         Position position = new Position(1, "Java");
         Position position2 = new Position(2, "Piton");
         List<Employee> employeeList = List.of(
-                new Employee(1, "Kirill", 20000, position2, report),
-                new Employee(2, "Slava", 200050, position, report),
-                new Employee(3, "Daria", 200100, position2, report1)
+                new Employee(1, "Kirill", 20000, 1, position),
+                new Employee(2, "Slava", 200050, 2, position2),
+                new Employee(3, "Daria", 200100, 3, position2)
         );
         employeeRepository.saveAll(employeeList);
     }
     @Test
     void getReportById() throws Exception {
-        employeeList();
+
         Integer id = reportService.createReport();
         mockMvc.perform(get("/report/{id}", id))
                 .andExpect(status().isOk());
