@@ -2,66 +2,73 @@ package ru.skypro.lessons.springboot.weblibrary1.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
-import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
-import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
-import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
 
-import java.io.File;
+import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
+import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 
-@EqualsAndHashCode
-@NoArgsConstructor
-@ToString
-@Data
+
 @Service
-@Profile("!test")
 public class  ReportServiceImpl implements ReportService {
-    @Autowired
-    public ReportRepository reportRepository;
+
+    private final ReportRepository reportRepository;
+    private final EmployeeService employeeService;
     ObjectMapper objectMapper = new ObjectMapper();
 Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
-    @Value("${app.env}")
-    private String dev;
+
+
+    public ReportServiceImpl(ReportRepository reportRepository, EmployeeService employeeService) {
+        this.reportRepository = reportRepository;
+        this.employeeService = employeeService;
+    }
+
     @Override
     public int createReport() throws IOException {
-        logger.info("Was invoked method for createReport");
-       List<ReportDTO> reportDTOS = reportRepository.createReport();
-            String json = objectMapper.writeValueAsString(reportDTOS);
-            String pathJson = saveReportToFile(json);
-            Report report = new Report();
-            report.setFilePath(pathJson);
-            reportRepository.save(report);
-         return report.getId();
+        logger.info("Was invoked method to add report to DB");
+        Integer i = 0;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(employeeService.getReport());
+            ReportDTO reportDTO = new ReportDTO();
+            reportDTO.setFile(json);
+            i = reportRepository.save(reportDTO.toReport()).getId();
+            logger.debug("Report was adding to DB with id={}", i);
+        } catch (JsonProcessingException e) {
+            logger.error("Was error to save object report as json string type", e);
+        }
+        return i;
 
 
     }
 
     @Override
-    public ResponseEntity<Report> upload(int id) {
-        logger.info("Was invoked method for upload{}",id);
-        ResponseEntity<Report> report = reportRepository.readReportById(id);
-        return report;
+    public ResponseEntity<Resource> upload(int id) {
+        logger.info("Was invoked method for getting report to DB with id={}", id);
+        ReportDTO reportDTO = ReportDTO.fromReport(reportRepository.findById(id).orElseThrow(() -> {
+            IllegalArgumentException e = new IllegalArgumentException("Введен не корректный ID");
+            return e;
+        }));
+        String fileName = "report.json";
+        String json = reportDTO.getFile();
+        Resource resource = new ByteArrayResource(json.getBytes());
+        logger.debug("Received the report {}", reportDTO);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(resource);
     }
+
 
     @Override
     public String saveReportToFile(String reportJson) {
@@ -75,6 +82,22 @@ Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
             logger.error("Failed to save report to file",reportJson,e);
             throw new RuntimeException("Failed to save report to file", e);
         }
+    }
+    @Override
+    public ResponseEntity<Resource> getReportById(Integer id) {
+        logger.info("Was invoked method for getting report to DB with id={}", id);
+        ReportDTO reportDTO = ReportDTO.fromReport(reportRepository.findById(id).orElseThrow(() -> {
+            IllegalArgumentException e = new IllegalArgumentException("Введен не корректный ID");
+            logger.error("Received invalid id={}",id, e);
+            return e;
+        }));
+        String fileName = "report.json";
+        String json = reportDTO.getFile();
+        Resource resource = new ByteArrayResource(json.getBytes());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(resource);
     }
 
 }

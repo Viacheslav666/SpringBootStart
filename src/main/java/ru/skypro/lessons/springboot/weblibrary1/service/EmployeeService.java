@@ -1,9 +1,9 @@
 package ru.skypro.lessons.springboot.weblibrary1.service;
 
-import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
-import ru.skypro.lessons.springboot.weblibrary1.DTO.FullInfo;
+import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeFullInfo;
+import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeReport;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 
 import java.io.IOException;
@@ -12,13 +12,16 @@ import java.util.Optional;
 
 public interface EmployeeService {
     public void addEmployee(Employee employee);
-    public  List<EmployeeDTO> getAllEmployees();
+    public  List<EmployeeFullInfo> getAllEmployees();
 
-    public List<EmployeeDTO> withHighestSalary();
-    public List<EmployeeDTO> employeesPosition(Optional position);
-    public List<FullInfo> fullInfo(int id);
+    public EmployeeDTO  withHighestSalary();
+    public List<EmployeeFullInfo> employeesPosition(Integer position);
+    public EmployeeFullInfo fullInfo(int id);
     public List<EmployeeDTO> getEmployeeWithPaging(int pageIndex);
-    public void upload(MultipartFile file) throws IOException;
+    public EmployeeDTO upload(MultipartFile file) throws IOException;
+    public List<EmployeeReport> getReport();
+    public EmployeeDTO getEmployeeById(Integer id);
+
 
 //    List<Employee> getAllEmployee();
 

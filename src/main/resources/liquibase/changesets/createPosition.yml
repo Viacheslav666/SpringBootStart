@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: one
+      id: 2
       author: Galkin
       changes:
         - createTable:
@@ -8,19 +8,15 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: int
+                  type: integer
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: position
-                  type: varchar(255)
+                  name: name
+                  type: varchar(100)
                   constraints:
                     nullable: false
-              - column:
-                  name: id_report
-                  type: int
-                  constraints:
-                    foreignKeyName: report
-                    nullable: false
+
+
