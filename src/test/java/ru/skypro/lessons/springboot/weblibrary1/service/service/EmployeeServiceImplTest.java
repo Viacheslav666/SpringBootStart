@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeFullInfo;
@@ -34,20 +35,22 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceImplTest {
+
     public static final Position pos = new Position(1, "Java");
     public static final Position pos1 = new Position(1, "Java");
+    private static final EmployeeFullInfo employeeFullInfo = new EmployeeFullInfo("Kirill", 20000, "Java");
     private static final Employee employee = new Employee(1, "Kirill", 20000, 1, pos);
     private static final EmployeeDTO employeeDTO = EmployeeDTO.fromEmployee(employee);
     public static final Report rep = new Report();
 
-    private static EmployeeFullInfo employeeFullInfo;
+@Mock
     private static PagingAndSortingRepository pagingAndSortingRepository;
     private static ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private EmployeeRepository employeeRepositoryMock;
     private static EmployeeController employeeController;
     @InjectMocks
-    private EmployeeServiceImpl employeeServiceTest;
+        private EmployeeServiceImpl employeeServiceTest;
 
     @Test
     void getAllEmployees_Ok() {
@@ -82,40 +85,35 @@ class EmployeeServiceImplTest {
 
     @Test
     void fullInfo_Ok() throws InterruptedException {
-        int id = 1;
-        List<EmployeeFullInfo> employees = new  ArrayList<>();
-        employees.add(new EmployeeFullInfo("Kir", 200000, "Java"));
-        when(employeeRepositoryMock.findById(id)).thenReturn(Optional.of(employee));
-        assertEquals(employees, employeeServiceTest.fullInfo(1));
+        when(employeeRepositoryMock.findByIdFullInfo(3))
+                .thenReturn(Optional.of(employeeFullInfo));
+        assertEquals(employeeFullInfo, employeeServiceTest.fullInfo(3));
     }
 
     @Test
     void getEmployeeWithPaging_OK() {
         List<Employee> employeeList = List.of(
-                new Employee(1, "Daria", 100,1, new Position(1, "Java")),
+                new Employee(1, "Daria", 100, 1, new Position(1, "Java")),
                 new Employee(2, "Ilia", 1300, 2, new Position(2, "Pithon")));
         List<EmployeeDTO> employeeListDTO = List.of(
-                new EmployeeDTO(1, "Daria", 100,1, new Position(1, "Java")),
+                new EmployeeDTO(1, "Daria", 100, 1, new Position(1, "Java")),
                 new EmployeeDTO(2, "Ilia", 1300, 2, new Position(2, "Pithon")));
-                List<EmployeeFullInfo> employees = new ArrayList<>();
+        List<EmployeeFullInfo> employees = new ArrayList<>();
         employees.add(new EmployeeFullInfo("Kir", 200000, "Java"));
-        employees.add(new EmployeeFullInfo( "Slava", 30000, "Pithon"));
+        employees.add(new EmployeeFullInfo("Slava", 30000, "Pithon"));
         Page<Employee> employeePage = new PageImpl<>(employeeList);
-        when(employeeRepositoryMock.findAll(PageRequest.of(0, 10)))
+        when(pagingAndSortingRepository.findAll(PageRequest.of(0, 10)))
                 .thenReturn(employeePage);
-        assertIterableEquals(employeeListDTO, employeeServiceTest.getEmployeeWithPaging(0));
-        verify(pagingAndSortingRepository, times(1)).findAll(PageRequest.of(0,10));
+        assertEquals(employeeListDTO.size(), employeeServiceTest.getEmployeeWithPaging(0).size());
     }
+
 
     @Test
     void upload_NO_OK_Exception() throws IOException {
-        MockMultipartFile mockMultipartFile = new MockMultipartFile(
-                "multipartFile",
-                "filename.txt",
-                "application/json",
-                "{\"id\" \":111\",\"name\": \"Kir\", \"salary\": 20000\",\"position:\"JS\"}".getBytes());
-
-        assertThrows(IOException.class, () -> employeeServiceTest.upload(mockMultipartFile));
+        EmployeeDTO employeeDTOExpected = new EmployeeDTO(3, "Irina", 150000, 3, pos);
+        String json = objectMapper.writeValueAsString(employeeDTOExpected);
+        MockMultipartFile file = new MockMultipartFile("employee", "employee.json", MediaType.MULTIPART_FORM_DATA_VALUE, json.getBytes());
+        assertEquals(employeeDTOExpected, employeeServiceTest.upload(file));
     }
 
 

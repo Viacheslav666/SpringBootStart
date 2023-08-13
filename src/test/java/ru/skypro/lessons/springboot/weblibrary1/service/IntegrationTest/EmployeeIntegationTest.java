@@ -15,20 +15,39 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Testcontainers
 public class EmployeeIntegationTest {
+    @Container
+    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13")
+            .withUsername("postgres")
+            .withPassword("Glad917746.");
+    @DynamicPropertySource
+    static void postgresProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+    @Autowired
+    private DataSource dataSource;
+
     @Autowired
     MockMvc mockMvc;
 
@@ -58,7 +77,6 @@ public class EmployeeIntegationTest {
 
     @Test
     void getEmployeesWithSalaryHigherThan() throws Exception {
-        employeeList();
         mockMvc.perform(get("/employees/withHighestSalary?salary=200100"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Daria"));
