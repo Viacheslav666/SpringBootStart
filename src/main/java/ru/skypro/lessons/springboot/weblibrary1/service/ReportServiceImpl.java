@@ -12,11 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
+import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
+
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 
 @Service
@@ -38,7 +42,6 @@ Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
         logger.info("Was invoked method to add report to DB");
         Integer i = 0;
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             String json = objectMapper.writeValueAsString(employeeService.getReport());
             ReportDTO reportDTO = new ReportDTO();
             reportDTO.setFile(json);
@@ -49,8 +52,8 @@ Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
         }
         return i;
 
-
     }
+
 
     @Override
     public ResponseEntity<Resource> upload(int id) {
