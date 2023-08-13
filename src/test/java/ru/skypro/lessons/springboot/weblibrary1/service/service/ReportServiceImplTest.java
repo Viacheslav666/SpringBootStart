@@ -39,8 +39,6 @@ public class ReportServiceImplTest {
     private ReportWithPathRepository reportWithPathRepository;
     @Mock
     private ReportRepository reportRepositoryMock;
-    @Mock
-    private ReportServiceImplTest reportMock;
     @InjectMocks
     private ReportServiceImpl reportServiceTest;
     @InjectMocks

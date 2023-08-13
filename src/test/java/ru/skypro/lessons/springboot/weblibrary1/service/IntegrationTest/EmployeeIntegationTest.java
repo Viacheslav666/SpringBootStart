@@ -33,20 +33,9 @@ import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
+
 public class EmployeeIntegationTest {
-    @Container
-    private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13")
-            .withUsername("postgres")
-            .withPassword("Glad917746.");
-    @DynamicPropertySource
-    static void postgresProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
-    @Autowired
-    private DataSource dataSource;
+
 
     @Autowired
     MockMvc mockMvc;
