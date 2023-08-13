@@ -26,9 +26,12 @@ import ru.skypro.lessons.springboot.weblibrary1.pojo.ReportWithPath;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -48,44 +51,25 @@ public class ReportServiceImplTest {
     private final Report rep = new Report();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
+    private final Report REPORT_1 = new Report( 1, "путь_1");
+    private final Report REPORT_2 = new Report(2,  "путь_2");
+    private final Report REPORT_3 = new Report(3,  "путь_3");
+    private final List<Report> REPORT_LIST = new ArrayList<>(List.of(REPORT_1, REPORT_2, REPORT_3));
 
     @Test
-    void CreateReport_OK() throws IOException {
-        List<EmployeeReport> employeeReportList = List.of(
-                new EmployeeReport(1,2L,10,10,10),
-                new EmployeeReport(2, 1L, 20,20, 20));
-        when(employeeServiceTest.getReport())
-                .thenReturn(employeeReportList);
-        String json = objectMapper.writeValueAsString(employeeServiceTest.getReport());
-        Report report =  new Report();
-        report.setFile(json);
-        Report reportExpected = new Report();
-        reportExpected.setFile(json);
-        reportExpected.setId(1);
-        when(reportRepositoryMock.save(report)).thenReturn(reportExpected);
-        assertEquals(1, reportServiceTest.createReport());
+    void createReports() {
+        when(reportRepositoryMock.createReport())
+                .thenReturn(REPORT_LIST);
+        assertEquals(null, reportServiceTest.createReport());
+        verify(reportRepositoryMock, times(1)).createReport();
     }
 
     @Test
-   public void upload_Ok() throws IOException {
-       List<EmployeeReport> employeeReportList = List.of(
-               new EmployeeReport(1,2L,10,10,10),
-               new EmployeeReport(2, 1L, 20,20, 20));
-       when(employeeServiceTest.getReport())
-               .thenReturn(employeeReportList);
-       String json = objectMapper.writeValueAsString(employeeServiceTest.getReport());
-       ReportWithPath report =  new ReportWithPath();
-       File file = new File("report.json");
-       Files.writeString(file.toPath(), json);
-       report.setPath(file.getAbsolutePath());
-       ReportWithPath reportExpected = new ReportWithPath();
-       reportExpected.setPath(file.getAbsolutePath());
-       reportExpected.setId(1);
-       when(reportWithPathRepository.save(report)).thenReturn(reportExpected);
-       assertEquals(1, reportServiceTest.upload(1));
-
-   }
+    public void ThrowExceptionWhenFindReportById_Ok() {
+        when(reportRepositoryMock.findById(1))
+                .thenThrow(IllegalArgumentException.class);
+        assertThrows(IllegalArgumentException.class, () -> reportServiceTest.getReportById(1));
+    }
 
 
 }

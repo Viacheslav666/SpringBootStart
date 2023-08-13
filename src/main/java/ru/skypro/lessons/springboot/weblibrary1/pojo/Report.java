@@ -20,4 +20,9 @@ public class Report {
     @Column(name = "file", columnDefinition="text")
     private String file;
 
+
+    public Report(String positionName, Long count, Integer max, Integer min, Double avg) {
+        this.file = "Position: " + positionName + ", countOfEmployee: " + count + ", maxSalary: " + max + ", minSalary: " + min + ", avgSalary: " + avg;
+    }
+
 }

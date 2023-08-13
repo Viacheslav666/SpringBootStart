@@ -12,6 +12,13 @@ import java.util.Optional;
 public interface ReportRepository extends CrudRepository<Report, Integer> {
 
     List<Report> findAll();
+    @Query("SELECT new com.example.weblibrary1.pojo.Report(" +
+            "p.positionName, COUNT (e.id), MAX (e.salary), MIN (e.salary), AVG (e.salary)) " +
+            "FROM Employee e join  fetch Position p " +
+            "where e.position = p " +
+            "Group by p.positionId " )
+    List<Report> createReport();
+
 
 
     @Override
