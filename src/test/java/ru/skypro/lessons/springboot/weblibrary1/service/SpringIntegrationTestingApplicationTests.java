@@ -4,6 +4,7 @@ package ru.skypro.lessons.springboot.weblibrary1.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -14,6 +15,7 @@ import javax.sql.DataSource;
 
 @SpringBootTest
 @Testcontainers
+@Component
 class SpringIntegrationTestingApplicationTests {
     @Container
     private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13")

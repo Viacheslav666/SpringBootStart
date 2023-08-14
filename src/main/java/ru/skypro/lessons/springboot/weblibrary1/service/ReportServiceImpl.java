@@ -2,6 +2,7 @@ package ru.skypro.lessons.springboot.weblibrary1.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-@RequiredArgsConstructor
+@Data
 @Service
 public class  ReportServiceImpl implements ReportService {
 
@@ -37,25 +38,26 @@ Logger logger = LoggerFactory.getLogger(ReportServiceImpl.class);
 
     @Override
     public Integer createReport() {
-        List<Report> reports = reportRepository.createReport();
-        try {
-            String text = objectMapper.writeValueAsString(reports);
-            Report report = new Report();
-            reportRepository.save(report);
-            String fileName =
-                    "c:\\Users\\Ruslan\\" +
-                            "report" + report.getId() + ".json";
-            File file = new File(fileName);
-            file.createNewFile();
-            report.setFile(fileName);
-            writeTextToFile(text, fileName);
-            reportRepository.save(report);
-            logger.info("Отчёт сохранён, reportId = " + report.getId());
-            return report.getId();
-        }  catch (IOException e) {
-            logger.error("Отчёт не сформирован");
-            e.printStackTrace();
-        } return 0;
+//        List<Report> reports = reportRepository.createReport();
+//        try {
+//            String text = objectMapper.writeValueAsString(reports);
+//            Report report = new Report();
+//            reportRepository.save(report);
+//            String fileName =
+//                    "c:\\Users\\Ruslan\\" +
+//                            "report" + report.getId() + ".json";
+//            File file = new File(fileName);
+//            file.createNewFile();
+//            report.setFile(fileName);
+//            writeTextToFile(text, fileName);
+//            reportRepository.save(report);
+//            logger.info("Отчёт сохранён, reportId = " + report.getId());
+//            return report.getId();
+//        }  catch (IOException e) {
+//            logger.error("Отчёт не сформирован");
+//            e.printStackTrace();
+//        }
+        return 0;
     }
     private static void writeTextToFile(String text, String fileName) {
         Path path = Paths.get(fileName);

@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 @Data
 @Service
-
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final  EmployeeRepository employeeRepository;

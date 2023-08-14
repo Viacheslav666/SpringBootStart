@@ -39,7 +39,7 @@ public class EmployeeIntegationTest {
 
     @Autowired
     MockMvc mockMvc;
-
+    @Autowired
     private final EmployeeRepository repository;
 
     @Autowired
@@ -65,6 +65,7 @@ public class EmployeeIntegationTest {
 
 
     @Test
+
     void getEmployeesWithSalaryHigherThan() throws Exception {
         mockMvc.perform(get("/employees/withHighestSalary?salary=200100"))
                 .andExpect(status().isOk())

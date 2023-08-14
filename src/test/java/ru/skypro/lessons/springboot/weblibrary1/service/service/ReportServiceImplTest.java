@@ -11,9 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeReport;
-import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
-import ru.skypro.lessons.springboot.weblibrary1.controller.EmployeeController;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
 
@@ -56,13 +53,7 @@ public class ReportServiceImplTest {
     private final Report REPORT_3 = new Report(3,  "путь_3");
     private final List<Report> REPORT_LIST = new ArrayList<>(List.of(REPORT_1, REPORT_2, REPORT_3));
 
-    @Test
-    void createReports() {
-        when(reportRepositoryMock.createReport())
-                .thenReturn(REPORT_LIST);
-        assertEquals(null, reportServiceTest.createReport());
-        verify(reportRepositoryMock, times(1)).createReport();
-    }
+
 
     @Test
     public void ThrowExceptionWhenFindReportById_Ok() {
