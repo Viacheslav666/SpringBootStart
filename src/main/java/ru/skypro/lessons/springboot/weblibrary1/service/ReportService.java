@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.io.IOException;
 
 public interface ReportService {
-    public int createReport() throws IOException;
+    public Integer createReport() throws IOException;
 
     public ResponseEntity<Resource> upload(int id);
 

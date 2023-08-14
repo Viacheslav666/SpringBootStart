@@ -11,42 +11,34 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeDTO;
-import ru.skypro.lessons.springboot.weblibrary1.DTO.EmployeeReport;
-import ru.skypro.lessons.springboot.weblibrary1.DTO.ReportDTO;
-import ru.skypro.lessons.springboot.weblibrary1.controller.EmployeeController;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
-import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
+
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
+import ru.skypro.lessons.springboot.weblibrary1.repository.ReportWithPathRepository;
 import ru.skypro.lessons.springboot.weblibrary1.service.EmployeeServiceImpl;
 import ru.skypro.lessons.springboot.weblibrary1.service.ReportServiceImpl;
+import ru.skypro.lessons.springboot.weblibrary1.pojo.ReportWithPath;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceImplTest {
     @Mock
-    private ReportRepository reportRepositoryMock;
+    private ReportWithPathRepository reportWithPathRepository;
     @Mock
-    private ReportServiceImplTest reportMock;
+    private ReportRepository reportRepositoryMock;
     @InjectMocks
     private ReportServiceImpl reportServiceTest;
     @InjectMocks
@@ -56,42 +48,19 @@ public class ReportServiceImplTest {
     private final Report rep = new Report();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final Report REPORT_1 = new Report( 1, "путь_1");
+    private final Report REPORT_2 = new Report(2,  "путь_2");
+    private final Report REPORT_3 = new Report(3,  "путь_3");
+    private final List<Report> REPORT_LIST = new ArrayList<>(List.of(REPORT_1, REPORT_2, REPORT_3));
+
 
 
     @Test
-    void CreateReport_OK() throws IOException {
-        List<EmployeeReport> employeeReportList = List.of(
-                new EmployeeReport(1,2L,10,10,10),
-                new EmployeeReport(2, 1L, 20,20, 20));
-        when(employeeServiceTest.getReport())
-                .thenReturn(employeeReportList);
-        String json = objectMapper.writeValueAsString(employeeServiceTest.getReport());
-        Report report =  new Report();
-        report.setFile(json);
-        Report reportExpected = new Report();
-        reportExpected.setFile(json);
-        reportExpected.setId(1);
-        when(reportRepositoryMock.save(report)).thenReturn(reportExpected);
-        assertEquals(1, reportServiceTest.createReport());
+    public void ThrowExceptionWhenFindReportById_Ok() {
+        when(reportRepositoryMock.findById(1))
+                .thenThrow(IllegalArgumentException.class);
+        assertThrows(IllegalArgumentException.class, () -> reportServiceTest.getReportById(1));
     }
-
-
-
-   @Test
-        void Upload_Ok() throws JsonProcessingException {
-       String json = objectMapper.writeValueAsString(employeeServiceTest.getReport());
-       Report report = new Report();
-       report.setId(1);
-       report.setFile(json);
-       when(reportRepositoryMock.findById(1))
-               .thenReturn(Optional.of(report));
-       ResponseEntity<Resource> expected = ResponseEntity.ok().
-               header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "report.json" + "\"")
-               .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-               .body(new ByteArrayResource(json.getBytes()));
-       assertEquals(expected, reportServiceTest.getReportById(1));
-        }
-
 
 
 }

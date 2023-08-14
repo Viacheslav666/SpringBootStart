@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 @Data
 @Service
-
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final  EmployeeRepository employeeRepository;
@@ -56,7 +55,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<EmployeeReport> getReport() {
         logger.info("Was invoked method for creating report");
         List <EmployeeReport> employeeReportList= employeeRepository.getReport();
-
         return employeeReportList;
     }
 

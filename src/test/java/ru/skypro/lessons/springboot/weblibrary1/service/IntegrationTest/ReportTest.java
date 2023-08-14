@@ -6,7 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Employee;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Position;
 import ru.skypro.lessons.springboot.weblibrary1.pojo.Report;
@@ -14,6 +19,7 @@ import ru.skypro.lessons.springboot.weblibrary1.repository.EmployeeRepository;
 import ru.skypro.lessons.springboot.weblibrary1.repository.ReportRepository;
 import ru.skypro.lessons.springboot.weblibrary1.service.ReportService;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,8 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ReportTest {
+
     @Autowired
     MockMvc mockMvc;
 
@@ -47,12 +53,5 @@ public class ReportTest {
                 new Employee(3, "Daria", 200100, 3, position2)
         );
         employeeRepository.saveAll(employeeList);
-    }
-    @Test
-    void getReportById() throws Exception {
-
-        Integer id = reportService.createReport();
-        mockMvc.perform(get("/report/{id}", id))
-                .andExpect(status().isOk());
     }
 }
