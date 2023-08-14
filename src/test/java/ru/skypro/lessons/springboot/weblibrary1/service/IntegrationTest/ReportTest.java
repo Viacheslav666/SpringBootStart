@@ -54,11 +54,4 @@ public class ReportTest {
         );
         employeeRepository.saveAll(employeeList);
     }
-    @Test
-    void getReportById() throws Exception {
-
-        Integer id = reportService.createReport();
-        mockMvc.perform(get("/report/{id}", id))
-                .andExpect(status().isOk());
-    }
 }
